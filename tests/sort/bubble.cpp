@@ -34,7 +34,7 @@ int main()
   bool verbose = true;
 
   // READ UNSORTED NUMBERS - ONLY FOR TESTING PURPOSES
-  vector<int> numbers = read::from_file<int>("tests/data/bs.txt");
+  vector<int> numbers = read::from_file<int>("/home/hiteek/Github/Colaborate/algorithms/dgen/1");
 
   //array and vector to test search::bubble algorithm
   unsigned int n = numbers.size();
@@ -51,17 +51,17 @@ int main()
   time.report("Elapsed time (normal comparison)");
 
   //printing sorted numbers
-  print::to_stdout("Sorted vector:", numbers);
+  //print::to_stdout("Sorted vector:", numbers);
 
 
   cout << "sorting numbers in vector<T> data structure (custom comparison)" << endl;
   time.start();
-  sort::bubble(cnumbers.begin(), cnumbers.end(), smaller, verbose);
+  //sort::bubble(cnumbers.begin(), cnumbers.end(), smaller, verbose);
   time.stop();
   time.report("Elapsed time (custom comparison)");
 
   //printing sorted numbers
-  print::to_stdout("Sorted vector:", cnumbers);
+  //print::to_stdout("Sorted vector:", cnumbers);
 
 
   cout << "sorting numbers in array data structure" << endl;
@@ -71,7 +71,7 @@ int main()
   time.report("Elapsed time (sorting array)");
 
   //saving sorted numbers
-  write::to_file(arr, arr+n, "tests/data/sorted_bubble.txt");
+  //write::to_file(arr, arr+n, "tests/data/sorted_bubble.txt");
 
   return 0;
 }
