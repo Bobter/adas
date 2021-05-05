@@ -42,8 +42,6 @@ namespace sort
             if(*itr > *inner)
               interchange_values(itr, inner);
           }
-        if(verbose)
-          print::to_stdout(first, last);
       }
   }
 
@@ -62,8 +60,6 @@ namespace sort
             if(comp(*itr, *inner))
               interchange_values(itr, inner);
           }
-        if(verbose)
-          print::to_stdout(first, last);
       }
   }
 
@@ -259,10 +255,43 @@ namespace sort
         *result++ = (*first2 < *first1)? *first2++ : *first1++;
       }
   }
+//version 1
+template<typename It>
+vector<typename It::value_type> merge(const It begin, const It mid, const It end)
+{
+    vector<typename It::value_type> v;
+    v.reserve(distance(begin,end)); // reduce el ordenamiento de 5000 elementos de 0.007 a 0.005
+    It it_l{ begin }, it_r{ mid };
+    It it_mid{ mid }, it_end{ end };
 
+    while (it_l != it_mid && it_r != it_end)
+    {
+        v.push_back((*it_l <= *it_r) ? *it_l++ : *it_r++);
+    }   
 
-    // template<class T>
-  // vector<T> mergesort(vector<T> elements, bool verbose)
+    v.insert(v.end(), it_l, it_mid);    
+    v.insert(v.end(), it_r, it_end);
+
+    return move(v);
+}
+
+template<typename It>
+void merge_sort(It begin, It end)
+{
+    auto d = distance(begin, end);
+    if(d<2) return;
+    
+    auto mid = next(begin, d/2);
+    merge_sort(begin, mid);
+    merge_sort(mid, end);
+
+    auto v = merge(begin, mid, end);
+    move(v.cbegin(), v.cend(), begin);
+}
+
+//segundo merge
+  // template<class T>
+  // vector<T> mergesortfir(vector<T> elements, bool verbose)
   // {
   //   typename vector<T>::iterator first = elements.begin();
   //   typename vector<T>::iterator last = elements.end();
@@ -280,27 +309,28 @@ namespace sort
   //   else
   //     {
   //       typename vector<T>::iterator midpoint = first + d/2;
-  //       if(verbose)
-  //         {
-  //           print::to_stdout("unsorted:", first, last);
-  //           print::to_stdout("lpart:", first, midpoint);
-  //           print::to_stdout("rpart:", midpoint+1, last);
-  //         }
+  //       // if(verbose)
+  //       //   {
+  //       //     print::to_stdout("unsorted:", first, last);
+  //       //     print::to_stdout("lpart:", first, midpoint);
+  //       //     print::to_stdout("rpart:", midpoint+1, last);
+  //       //   }
 
-  //       mergesort(first, midpoint, first_aux, midpoint_aux, verbose);
-  //       mergesort(midpoint+1, last, midpoint_aux+1, last, verbose);
+  //       mergesortfir(first, midpoint, first_aux, midpoint_aux, verbose);
+  //       mergesortfir(midpoint+1, last, midpoint_aux+1, last, verbose);
 
   //       merge(first_aux, midpoint_aux,
   //             midpoint_aux+1, last_aux,
   //             first);
 
-  //       if(verbose)
-  //         print::to_stdout("merged:", first_aux, last_aux);
+  //       // if(verbose)
+  //       //   print::to_stdout("merged:", first_aux, last_aux);
   //     }
 
-  //}
+  // }
+  // //tercer merge
   // template<class RandomAccessIterator>
-  // void mergesort(RandomAccessIterator first, RandomAccessIterator last,
+  // void mergesortver(RandomAccessIterator first, RandomAccessIterator last,
   //                RandomAccessIterator first_aux, RandomAccessIterator last_aux,
   //                bool verbose)
   // {
@@ -318,25 +348,24 @@ namespace sort
   //     {
   //       RandomAccessIterator midpoint = first + d/2;
   //       RandomAccessIterator midpoint_aux = first + d/2;
-  //       if(verbose)
-  //         {
-  //           print::to_stdout("unsorted:", first, last);
-  //           print::to_stdout("lpart:", first, midpoint);
-  //           print::to_stdout("rpart:", midpoint+1, last);
-  //         }
+  //       // if(verbose)
+  //       //   {
+  //       //     print::to_stdout("unsorted:", first, last);
+  //       //     print::to_stdout("lpart:", first, midpoint);
+  //       //     print::to_stdout("rpart:", midpoint+1, last);
+  //       //   }
 
-  //       mergesort(first, midpoint, first_aux, midpoint_aux, verbose);
-  //       mergesort(midpoint+1, last, midpoint_aux+1, last, verbose);
+  //       mergesortver(first, midpoint, first_aux, midpoint_aux, verbose);
+  //       mergesortver(midpoint+1, last, midpoint_aux+1, last, verbose);
 
   //       merge(first_aux, midpoint_aux,
   //             midpoint_aux+1, last_aux,
   //             first);
 
-  //       if(verbose)
-  //         print::to_stdout("merged:", first_aux, last_aux);
-  //     }
+  //     //   if(verbose)
+  //     //     print::to_stdout("merged:", first_aux, last_aux);
+  //      }
   // }
-
 
   template<class T>
   vector<T> quicksort(vector<T> elements, vector<T> pivots, bool verbose)
